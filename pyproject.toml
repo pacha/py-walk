@@ -1,0 +1,36 @@
+[project]
+name = "gitignore-match"
+version = "0.1.0"
+authors = [
+    {name="Andrés Sopeña Pérez", email="code@ehmm.org"},
+]
+description = "Match filenames against (100% compatible) gitignore glob patterns"
+readme = "README.md"
+requires-python = ">=3.7"
+classifiers = [
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = []
+
+[project.urls]
+"Homepage" = "https://github.com/pacha/gitignore-match"
+"Bug Tracker" = "https://github.com/pacha/gitignore-match/issues"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.pytest.ini_options]
+log_cli = false
+log_cli_level = "INFO"
+log_cli_format = "[%(levelname)s] %(message)s"
+
+[tool.mypy]
+ignore_missing_imports = true

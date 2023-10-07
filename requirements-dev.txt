@@ -1,0 +1,5 @@
+mypy
+pytest
+black
+build
+twine

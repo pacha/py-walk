@@ -1,0 +1,31 @@
+name: Type checks
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  type-checks:
+    name: Run type checks
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.11
+
+    - name: Install dependencies
+      run: |
+        pip install mypy
+        pip install types-pyyaml
+
+    - name: Run mypy checks
+      run: mypy gitignore_match/
