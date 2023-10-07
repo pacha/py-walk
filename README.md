@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="https://raw.githubusercontent.com/pacha/gitignore-match/main/docs/logo-header.png" alt="logo" width="100%">
+    <img src="https://raw.githubusercontent.com/pacha/gitignore-match/main/docs/logo-header.png" alt="logo">
 </p>
 
 gitignore-match
