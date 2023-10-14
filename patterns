@@ -1,0 +1,7 @@
+
+# comment
+
+**/foo.txt
+  *.jpeg
+*.png      
+/a/**/baz.*

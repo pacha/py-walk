@@ -17,7 +17,9 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
-dependencies = []
+dependencies = [
+    "sly",
+]
 
 [project.urls]
 "Homepage" = "https://github.com/pacha/gitignore-match"
