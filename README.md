@@ -10,14 +10,14 @@ gitignore-match
 ![Code formatting](https://github.com/pacha/gitignore-match/actions/workflows/code-formatting.yaml/badge.svg)
 ![Supported Python versions](https://img.shields.io/pypi/pyversions/gitignore-match.svg)
 
-_Python library to match files against gitignore-type patterns which aims to be nearly* 100% compatible with Git's implementation._
+Python library to match files against gitignore-type patterns which aims to be nearly* 100% compatible with Git's implementation.
 
-\* Currently, POSIX extended character classes like `[: :]`, `[. .]` or `[= =]` aren't supported.
+_\* Currently, POSIX extended character classes like `[: :]`, `[. .]` or `[= =]` aren't supported._
 
-> To guarantee the utmost compatibility with Git's behavior, `gitignore-match` is
-> run through hundreds of tests. These tests are designed to compare the
-> library's results with those of Git itself, ensuring they align as closely as
-> possible.
+> To guarantee the highest compatibility possible with Git's behavior,
+> `gitignore-match` is run through hundreds of tests. These tests are designed to
+> compare the library's results with those of Git itself, ensuring they align as
+> closely as possible.
 
 ## Usage
 
@@ -61,7 +61,7 @@ if parser.match("file.txt"):
 
 ## Installation
 
-To install cells, simply use `pip`:
+To install gitignore-match, simply use `pip`:
 ```shell
 $ pip install gitignore-match
 ```
