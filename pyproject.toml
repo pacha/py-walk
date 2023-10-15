@@ -31,8 +31,8 @@ build-backend = "hatchling.build"
 
 [tool.pytest.ini_options]
 log_cli = false
-log_cli_level = "INFO"
-log_cli_format = "[%(levelname)s] %(message)s"
+log_cli_level = "DEBUG"
+log_cli_format = "%(message)s"
 
 [tool.mypy]
 ignore_missing_imports = true

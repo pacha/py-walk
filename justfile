@@ -7,10 +7,10 @@ export PYTHONPATH := project_dir
   just --list
 
 @test-all:
-  pytest --capture=no -o log_cli=false tests/
+  pytest tests/
 
 @test *params:
-  pytest -x --capture=no -o log_cli=true {{ params }}
+  pytest -x -o log_cli=true {{ params }}
 
 @format:
   black {{ project_dir }}

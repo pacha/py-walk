@@ -1,3 +1,3 @@
 
 from .pattern import Pattern
-from .pattern_collection import PatternCollection
+from .parser import Parser
