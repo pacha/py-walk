@@ -1,3 +1,4 @@
+# mypy: disable-error-code="name-defined"
 import re
 import fnmatch
 
@@ -7,7 +8,7 @@ from gitignore_match.logs import log
 
 
 class GlobLexer(Lexer):
-    tokens = {
+    tokens = {  # noqa
         ESC_EXCLAMATION_MARK,  # noqa
         ESC_SQUARE_BRACKET,  # noqa
         ESC_QUESTION_MARK,  # noqa
@@ -62,6 +63,7 @@ regex_map = {
 
 anchoring_tokens = {"SLASH", "DOUBLE_STAR"}
 slash_tokens = {"SLASH", "SLASH_END", "DOUBLE_STAR", "DOUBLE_STAR_START"}
+
 
 def gitglob_to_regex(glob_pattern: str) -> re.Pattern:
     regex = ""

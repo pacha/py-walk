@@ -1,4 +1,3 @@
-
 class GitignoreMatchException(Exception):
     """GitignoreMatch base exeption."""
 
@@ -21,4 +20,3 @@ class GitignoreMatchInternalError(GitignoreMatchError):
     """Exeption for internal, unexpected errors."""
 
     pass
-

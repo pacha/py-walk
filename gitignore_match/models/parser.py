@@ -7,6 +7,7 @@ from gitignore_match.exceptions import GitignoreMatchInputError
 from gitignore_match.logs import log
 from .pattern import Pattern
 
+
 @dataclass
 class Parser:
     patterns: list[Pattern]

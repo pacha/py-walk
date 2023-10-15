@@ -28,6 +28,7 @@ def yaml_data():
         for path in test_case.get("non_matches", []):
             yield (patterns, path, False)
 
+
 @pytest.fixture(params=yaml_data(), scope="session")
 def path_test(request):
     return request.param
@@ -49,7 +50,9 @@ def test_gitignore_patterns(repo_path, path_test):
     parser = get_parser_from_file(gitignore_path)
 
     # check actual result from Git
-    command_result = run(["git", "check-ignore", path], cwd=gitignore_path.parent, capture_output=True)
+    command_result = run(
+        ["git", "check-ignore", path], cwd=gitignore_path.parent, capture_output=True
+    )
     git_result = bool(command_result.returncode == 0)
 
     # check result from gitignore-match
@@ -58,5 +61,5 @@ def test_gitignore_patterns(repo_path, path_test):
     log.debug(f"Git result: {git_result}")
     log.debug(f"Lib result: {lib_result}")
     log.debug(f"Expected: {expected}")
-    assert (git_result == lib_result)
-    assert (lib_result == expected)
+    assert git_result == lib_result
+    assert lib_result == expected

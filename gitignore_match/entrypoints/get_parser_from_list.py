@@ -3,6 +3,7 @@ from pathlib import Path
 
 from gitignore_match.models import Parser
 
+
 def get_parser_from_list(pattern_list: list[str], base_dir: Union[Path, str]) -> Parser:
     """Create a PatternCollection object from a list of patterns."""
 

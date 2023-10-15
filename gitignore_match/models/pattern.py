@@ -7,10 +7,11 @@ from gitignore_match.lib.gitglob_to_regex import gitglob_to_regex
 
 path_name_pattern = re.compile(r"[^/]+/?$")
 
+
 @dataclass
 class Pattern:
     glob: str
-    regex: str = field(init=False)
+    regex: re.Pattern = field(init=False)
     negated: bool = False
 
     def __post_init__(self):

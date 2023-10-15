@@ -7,7 +7,8 @@ import pytest
 # change logging settings for testing
 @pytest.fixture(autouse=True)
 def set_log_level(caplog):
-    caplog.set_level(logging.DEBUG, logger='gitignore_match')
+    caplog.set_level(logging.DEBUG, logger="gitignore_match")
+
 
 @pytest.fixture(scope="session")
 def fixtures_path():

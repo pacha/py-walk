@@ -6,6 +6,7 @@ from .get_parser_from_list import get_parser_from_list
 
 COMMENT_LEADER = "#"
 
+
 def get_parser_from_text(text: str, base_dir: Union[Path, str]) -> Parser:
     """Create a Parser object from a multiline text."""
 

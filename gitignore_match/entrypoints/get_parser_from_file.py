@@ -4,6 +4,7 @@ from pathlib import Path
 from gitignore_match.models import Parser
 from .get_parser_from_text import get_parser_from_text
 
+
 def get_parser_from_file(path: Union[Path, str]) -> Parser:
     """Create a Parser object from a gitignore-type file."""
 
