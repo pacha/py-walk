@@ -374,3 +374,14 @@
   non_matches:
   - "foo "
   - "foo   "
+# -----------------
+- patterns: |
+    __pycache__/
+    *.py[cod]
+  matches:
+  - "main.pyc"
+  - "dir/main.pyc"
+  - "__pycache__/"
+  non_matches:
+  - "main.py"
+
