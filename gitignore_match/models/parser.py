@@ -1,4 +1,5 @@
 import os
+from typing import List
 from typing import Union
 from pathlib import Path
 from dataclasses import dataclass
@@ -10,10 +11,10 @@ from .pattern import Pattern
 
 @dataclass
 class Parser:
-    patterns: list[Pattern]
+    patterns: List[Pattern]
     base_dir: Path
 
-    def __init__(self, glob_pattern_list: list[str], base_dir: Path):
+    def __init__(self, glob_pattern_list: List[str], base_dir: Path):
         self.patterns = []
         for glob_pattern in glob_pattern_list:
             log.debug("\n-- Regex building")

@@ -1,10 +1,11 @@
+from typing import List
 from typing import Union
 from pathlib import Path
 
 from gitignore_match.models import Parser
 
 
-def get_parser_from_list(pattern_list: list[str], base_dir: Union[Path, str]) -> Parser:
+def get_parser_from_list(pattern_list: List[str], base_dir: Union[Path, str]) -> Parser:
     """Create a PatternCollection object from a list of patterns."""
 
     # normalize base_dir to Path

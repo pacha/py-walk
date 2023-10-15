@@ -1,5 +1,4 @@
 import re
-from sly.lex import LexError
 from dataclasses import field
 from dataclasses import dataclass
 
@@ -24,7 +23,7 @@ class Pattern:
         # get regex
         try:
             self.regex = gitglob_to_regex(inner_glob)
-        except LexError:
+        except Exception:
             self.regex = re.compile("(?!)")
 
     def match(self, path: str) -> bool:
