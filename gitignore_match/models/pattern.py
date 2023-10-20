@@ -2,6 +2,7 @@ import re
 from dataclasses import field
 from dataclasses import dataclass
 
+from gitignore_match.logs import log
 from gitignore_match.lib.gitglob_to_regex import gitglob_to_regex
 
 path_name_pattern = re.compile(r"[^/]+/?$")
@@ -23,7 +24,8 @@ class Pattern:
         # get regex
         try:
             self.regex = gitglob_to_regex(inner_glob)
-        except Exception:
+        except Exception as err:
+            log.debug(f"Invalid regular expression: {err}")
             self.regex = re.compile("(?!)")
 
     def match(self, path: str) -> bool:

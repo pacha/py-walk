@@ -384,4 +384,242 @@
   - "__pycache__/"
   non_matches:
   - "main.py"
-
+# -----------------
+- patterns: |
+    [AB^-a]
+  matches:
+  - "A"
+  - "^"
+  - "_"
+  - "a"
+  non_matches:
+  - "Z"
+  - "]"
+# -----------------
+- patterns: |
+    [[:alpha:]]
+  matches:
+  - "a"
+  - "M"
+  non_matches:
+  - "3"
+# -----------------
+- patterns: |
+    [a-zA-Z]
+  matches:
+  - "a"
+  - "M"
+  non_matches:
+  - "3"
+# -----------------
+- patterns: |
+    [[:alpha:]CD]
+  matches:
+  - "a"
+  - "b"
+  - "C"
+  - "D"
+  non_matches:
+  - "_"
+  - "!"
+  - "3"
+# -----------------
+- patterns: |
+    [^abc]
+  matches:
+  - "d"
+  - "e"
+  - "M"
+  non_matches:
+  - "a"
+  - "b"
+  - "c"
+# -----------------
+- patterns: |
+    [!abc]
+  matches:
+  - "d"
+  - "e"
+  - "M"
+  non_matches:
+  - "a"
+  - "b"
+  - "c"
+# -----------------
+- patterns: |
+    []]
+  matches:
+  - "]"
+  non_matches:
+  - "["
+  - "a"
+# -----------------
+- patterns: |
+    []-]
+  matches:
+  - "]"
+  - "-"
+  non_matches:
+  - "["
+  - "a"
+# -----------------
+- patterns: |
+    [!]]
+  matches:
+  - "["
+  - "a"
+  non_matches:
+  - "]"
+# -----------------
+- patterns: |
+    [!]-]
+  matches:
+  - "["
+  - "a"
+  non_matches:
+  - "]"
+  - "-"
+# -----------------
+- patterns: |
+    [^]]
+  matches:
+  - "["
+  - "a"
+  non_matches:
+  - "]"
+# -----------------
+- patterns: |
+    [^]-]
+  matches:
+  - "["
+  - "a"
+  non_matches:
+  - "]"
+  - "-"
+# -----------------
+- patterns: |
+    [^]-a-z]
+  matches:
+  - "["
+  - "9"
+  non_matches:
+  - "a"
+  - "]"
+  - "-"
+# -----------------
+- patterns: |
+    [^]a-z-]
+  matches:
+  - "["
+  - "9"
+  non_matches:
+  - "a"
+  - "]"
+  - "-"
+# -----------------
+- patterns: |
+    [^]^-a-]
+  matches:
+  - "["
+  - "3"
+  - "A"
+  - "b"
+  non_matches:
+  - "]"
+  - "_"
+  - "a"
+  - "-"
+# -----------------
+# ^-3 is an invalid range and therefore ignored
+- patterns: |
+    [^]^-3-]
+  matches:
+  - "["
+  - "9"
+  - "2"
+  non_matches:
+  - "]"
+  - "-"
+# -----------------
+- patterns: |
+    [[:alpha:]]
+  matches:
+  - "a"
+  - "M"
+  non_matches:
+  - "3"
+# -----------------
+- patterns: |
+    [[:digit:]]
+  matches:
+  - "3"
+  - "0"
+  non_matches:
+  - "a"
+  - "$"
+# -----------------
+- patterns: |
+    [[:blank:]]
+  matches:
+  - " "
+  - "\t"
+  non_matches:
+  - "a"
+  - "$"
+# -----------------
+- patterns: |
+    foobar/*
+    !foobar/bat.txt
+  matches:
+  - "foobar/this.txt"
+  - "foobar/a/that.txt"
+  non_matches:
+  - "this.txt"
+  - "foobar/bat.txt"
+# -----------------
+- patterns: |
+    foobar/
+    !foobar/bat.txt
+  matches:
+  - "foobar/this.txt"
+  - "foobar/a/that.txt"
+  - "foobar/bat.txt"
+  non_matches:
+  - "this.txt"
+# -----------------
+- patterns: |
+    foo/*
+    !foo/bar/bat.txt
+  matches:
+  - "foo/this.txt"
+  - "foo/a/that.txt"
+  - "foo/bar/bat.txt"
+  non_matches:
+  - "this.txt"
+# -----------------
+- patterns: |
+    foo/
+    !bar.txt
+  matches:
+  - "foo/this.txt"
+  - "foo/bar.txt"
+  non_matches:
+  - "bar.txt"
+# -----------------
+- patterns: |
+    foo/*
+    !bar.txt
+  matches:
+  - "foo/this.txt"
+  non_matches:
+  - "foo/bar.txt"
+  - "bar.txt"
+# -----------------
+- patterns: |
+    f?o
+    !foo
+  matches:
+  - "fao"
+  - "fio"
+  non_matches:
+  - "foo"

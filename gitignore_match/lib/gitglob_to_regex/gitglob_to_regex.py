@@ -5,6 +5,7 @@ import fnmatch
 from sly import Lexer
 
 from gitignore_match.logs import log
+from .character_class_to_regex import character_class_to_regex
 
 
 class GlobLexer(Lexer):
@@ -32,7 +33,7 @@ class GlobLexer(Lexer):
     ESC_SPACE = r"\\ "
     ESC_STAR = r"\\\*"
     DOUBLE_STAR_START = r"^((\*\*/)|(/\*\*/))"
-    CHARACTER_CLASS = r"\[!?\]?[^]]*\]"
+    CHARACTER_CLASS = r"\[(\^|!)?\]?-?(\[:[a-z]+:\]|(\\\]|\\-|[^]-])-(\\\]|\\-|[^]-])|\\\]|\\-|[^]-])*-?\]"
     TRAILING_SPACE = r"\s+$"
     QUESTION_MARK = r"\?"
     DOUBLE_STAR = r"/\*\*/"
@@ -72,8 +73,10 @@ def gitglob_to_regex(glob_pattern: str) -> re.Pattern:
     left_anchored_prefix = ""
     for token in tokens:
         log.debug(f"- token: {token.type} ({token.value})")
-        if token.type in ("TEXT", "CHARACTER_CLASS"):
+        if token.type == "TEXT":
             regex += fnmatch.translate(token.value)[4:-3]
+        elif token.type == "CHARACTER_CLASS":
+            regex += character_class_to_regex(token.value)
         elif token.type == "DOUBLE_STAR_START":
             left_anchored_prefix = "((.+/)|/)"
         else:

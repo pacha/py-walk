@@ -47,7 +47,7 @@ if parser.match("file.txt"):
 
 Passing patterns using a list:
 ```python
-from gitignore_match import get_parser_from_text
+from gitignore_match import get_parser_from_list
 
 patterns = [
     "*.txt",
