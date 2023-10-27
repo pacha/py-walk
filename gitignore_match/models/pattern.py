@@ -29,7 +29,14 @@ class Pattern:
             self.regex = re.compile("(?!)")
 
     def match(self, path: str) -> bool:
-        return bool(self.regex.search(path))
+        result = self.regex.search(path)
+        return result.group(0) if result else None
+
+    def fullmatch(self, path: str) -> bool:
+        return bool(self.regex.fullmatch(path))
 
     def __str__(self):
-        return f"Glob: {self.glob} Regex: {self.regex.pattern}{ ' (negated)' if self.negated else ''}"
+        return (
+            f"Glob: {self.glob} Regex: {self.regex.pattern}"
+            f"{ ' (negated)' if self.negated else ''}"
+        )

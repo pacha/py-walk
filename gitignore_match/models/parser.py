@@ -49,20 +49,23 @@ class Parser:
         log.debug(f"Path: '{path_str}'")
 
         for pattern in self.patterns:
-
             # if no match found, skip negative patterns
             if not match_found and pattern.negated:
                 continue
 
             # check if pattern matches
-            if pattern.match(path_str):
+            if pattern.match(path_str) is not None:
                 if pattern.negated:
                     matched_patterns["negative"].append(pattern)
-                    if not is_parent_dir_excluded(relative_path, matched_patterns["positive"]):
+                    if not is_parent_dir_excluded(
+                        path_str, pattern, matched_patterns["positive"]
+                    ):
                         match_found = False
                         log.debug(f"- {pattern} [Match!]")
                     else:
-                        log.debug(f"- Glob: {pattern.glob} [skipped: parent directory already matched]")
+                        log.debug(
+                            f"- Glob: {pattern.glob} [skipped: parent directory already matched]"
+                        )
                 else:
                     matched_patterns["positive"].append(pattern)
                     match_found = True
@@ -70,11 +73,77 @@ class Parser:
         return match_found
 
 
-def is_parent_dir_excluded(relative_path: Path, already_matched_patterns: list[Pattern]):
+def is_parent_dir_excluded(
+    path_str: str, negated_pattern: Pattern, already_matched_patterns: list[Pattern]
+):
+    match = negated_pattern.match(path_str)
+    for pattern in already_matched_patterns:
+        log.debug(f"-- parent check: {match} vs {pattern.regex.pattern}")
+        if not pattern.fullmatch(match):
+            log.debug(f"-- parent excluded: {pattern.regex.pattern}")
+            return True
+    log.debug("-- no parent excluded")
+    return False
+
+def is_parent_dir_excluded5(
+    relative_path: Path, negated_pattern: Pattern, already_matched_patterns: list[Pattern]
+):
+    path_str = str(relative_path)
+    negated_pattern_match = negated_pattern.inner_regex.search(path_str).group(0)
+    try:
+        next_char = path_str[len(negated_pattern_match)]
+    except IndexError:
+        next_char = ""
+    log.debug(f"-- next char: {next_char}")
+    if next_char == os.sep:
+        negated_pattern_match += os.sep
+    for pattern in already_matched_patterns:
+        log.debug(f"-- parent check: {negated_pattern_match} vs {pattern.inner_regex.pattern}")
+        if not pattern.inner_fullmatch(negated_pattern_match):
+            log.debug(f"-- parent excluded: {pattern.inner_regex.pattern}")
+            return True
+    log.debug("-- no parent excluded")
+    return False
+
+def is_parent_dir_excluded4(
+    relative_path: Path, already_matched_patterns: list[Pattern]
+):
+    for pattern in already_matched_patterns:
+        log.debug(f"-- parent check: {str(relative_path)} vs {pattern.inner_regex.pattern}")
+        if not pattern.inner_match(str(relative_path)):
+            log.debug(f"-- parent excluded: {pattern.inner_regex.pattern}")
+            return True
+    log.debug("-- no parent excluded")
+    return False
+
+def is_parent_dir_excluded3(
+    relative_path: Path, already_matched_patterns: list[Pattern]
+):
+    parents = list(
+        reversed([f"{parent.as_posix()}{os.sep}" for parent in relative_path.parents])
+    )[1:]
+    log.debug(f"-- Testing parents: {parents}")
+    flagged = False
+    for parent in parents:
+        log.debug(f"-- parent: {parent}")
+        for pattern in already_matched_patterns:
+            log.debug(f"-- pattern: {pattern.inner_regex.pattern}")
+            if pattern.match(parent):
+                if not flagged:
+                    log.debug("-- flagged!")
+                    flagged = True
+                else:
+                    log.debug("-- matched!")
+                    return True
+    return False
+
+def is_parent_dir_excluded2(
+    relative_path: Path, already_matched_patterns: list[Pattern]
+):
     # get path components
-    parent_paths_str = list(reversed([
-        f"{parent.as_posix()}{os.sep}" for parent in relative_path.parents
-    ]))
+    parent_paths_str = list(
+        reversed([f"{parent.as_posix()}{os.sep}" for parent in relative_path.parents])
+    )
     if len(parent_paths_str) < 2:
         return False
 
@@ -86,6 +155,8 @@ def is_parent_dir_excluded(relative_path: Path, already_matched_patterns: list[P
             if matched_pattern.match(ancestor):
                 return True
     for matched_pattern in already_matched_patterns:
-        if not matched_pattern.glob.endswith('*') and matched_pattern.match(parent):
+        if (
+            not matched_pattern.glob.endswith("*") or matched_pattern.glob == "*"
+        ) and matched_pattern.match(parent):
             return True
     return False

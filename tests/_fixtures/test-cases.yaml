@@ -623,3 +623,98 @@
   - "fio"
   non_matches:
   - "foo"
+# -----------------
+- patterns: |
+    *
+    !.gitignore
+    !script.pl
+    !template.latex
+  matches:
+  - "foo.txt"
+  - "a"
+  - "bar/baz.png"
+  - "b/script.pl"
+  non_matches:
+  - ".gitignore"
+  - "script.pl"
+  - "template.latex"
+# -----------------
+- patterns: |
+    fo*
+  matches:
+    - "foo"
+    - "fooo"
+    - "foo.txt"
+    - "foo/bar.txt"
+    - "bar/foo"
+# -----------------
+- patterns: |
+    *
+  matches:
+    - "foo"
+    - "fooo"
+    - "foo.txt"
+    - "foo/bar.txt"
+    - "bar/foo"
+# -----------------
+- patterns: |
+    fo*
+    !foobar.txt
+  matches:
+    - "foo"
+    - "fooo"
+    - "foo.txt"
+    - "foo/bar.txt"
+    - "bar/foo"
+  non_matches:
+    - "foobar.txt"
+    - "a/foobar.txt"
+    - "foobar.txt/file"
+# -----------------
+- patterns: |
+    *
+    !foobar.txt
+  matches:
+    - "foo"
+    - "fooo"
+    - "foo.txt"
+    - "foo/bar.txt"
+    - "bar/foo"
+    - "a/foobar.txt"
+    - "foobar.txt/file"
+  non_matches:
+    - "foobar.txt"
+# -----------------
+- patterns: |
+    /*
+  matches:
+    - "foo.txt"
+    - "foobar.txt"
+    - "foo/bar.txt"
+# -----------------
+- patterns: |
+    /*
+    !*/
+  matches:
+    - "foo.txt"
+    - "foobar.txt"
+  non_matches:
+    - "foo/bar.txt"
+    - "a/b/bar.txt"
+# -----------------
+- patterns: |
+    /foo/*
+    !/foo/*/
+  matches:
+    - "foo/bar.txt"
+  non_matches:
+    - "foo/a/bar.txt"
+# -----------------
+- patterns: |
+    /a/**
+    !a/b/
+  matches:
+    - "a/c"
+    - "a/b/bar.txt"
+  non_matches:
+    - "a"

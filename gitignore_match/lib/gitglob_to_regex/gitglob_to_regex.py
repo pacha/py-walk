@@ -1,6 +1,7 @@
 # mypy: disable-error-code="name-defined"
 import re
 import fnmatch
+from typing import Tuple
 
 from sly import Lexer
 
@@ -16,12 +17,15 @@ class GlobLexer(Lexer):
         ESC_SPACE,  # noqa
         ESC_STAR,  # noqa
         DOUBLE_STAR_START,  # noqa
+        DOUBLE_STAR_END,  # noqa
         CHARACTER_CLASS,  # noqa
         TRAILING_SPACE,  # noqa
         QUESTION_MARK,  # noqa
         DOUBLE_STAR,  # noqa
         SPACE,  # noqa
+        STAR_END,  # noqa
         STAR,  # noqa
+        SLASH_START,  # noqa
         SLASH_END,  # noqa
         SLASH,  # noqa
         TEXT,  # noqa
@@ -32,13 +36,16 @@ class GlobLexer(Lexer):
     ESC_QUESTION_MARK = r"\\\?"
     ESC_SPACE = r"\\ "
     ESC_STAR = r"\\\*"
+    DOUBLE_STAR_END = r"/?\*\*/$"
     DOUBLE_STAR_START = r"^((\*\*/)|(/\*\*/))"
     CHARACTER_CLASS = r"\[(\^|!)?\]?-?(\[:[a-z]+:\]|(\\\]|\\-|[^]-])-(\\\]|\\-|[^]-])|\\\]|\\-|[^]-])*-?\]"
     TRAILING_SPACE = r"\s+$"
     QUESTION_MARK = r"\?"
     DOUBLE_STAR = r"/\*\*/"
     SPACE = r" "
+    STAR_END = r"\*$"
     STAR = r"\*"
+    SLASH_START = r"^/"
     SLASH_END = r"/$"
     SLASH = r"/"
     TEXT = r"[^/[ \\?]+"
@@ -52,41 +59,47 @@ regex_map = {
     "ESC_SQUARE_BRACKET": r"\[",
     "ESC_SPACE": r"\ ",
     "ESC_STAR": r"\*",
-    "DOUBLE_STAR_START": r"((.+/)|/)",
     "TRAILING_SPACE": r"",
     "QUESTION_MARK": r".",
+    "DOUBLE_STAR_END": r".*/.*",
     "DOUBLE_STAR": r"((/.+/)|/)",
     "SPACE": r"\ ",
+    "STAR_END": r"[^/]*",
     "STAR": r"[^/]*",
+    "SLASH_START": r"",
     "SLASH_END": r"/",
     "SLASH": r"/",
 }
 
-anchoring_tokens = {"SLASH", "DOUBLE_STAR"}
+anchoring_tokens = {"SLASH", "SLASH_START", "DOUBLE_STAR"}
 slash_tokens = {"SLASH", "SLASH_END", "DOUBLE_STAR", "DOUBLE_STAR_START"}
 
 
-def gitglob_to_regex(glob_pattern: str) -> re.Pattern:
-    regex = ""
+def gitglob_to_regex(glob_pattern: str) -> Tuple[re.Pattern, re.Pattern]:
     tokens = list(glob_lexer.tokenize(glob_pattern))
-    only_left_anchoring = set([token.type for token in tokens]) & anchoring_tokens
+
+    # get inner regex
+    core_regex = ""
+    only_left_anchoring = set([token.type for token in tokens]) & anchoring_tokens or glob_pattern == '*'
     left_anchored_prefix = ""
     for token in tokens:
         log.debug(f"- token: {token.type} ({token.value})")
         if token.type == "TEXT":
-            regex += fnmatch.translate(token.value)[4:-3]
+            core_regex += fnmatch.translate(token.value)[4:-3]
         elif token.type == "CHARACTER_CLASS":
-            regex += character_class_to_regex(token.value)
+            core_regex += character_class_to_regex(token.value)
         elif token.type == "DOUBLE_STAR_START":
-            left_anchored_prefix = "((.+/)|/)"
+            left_anchored_prefix = "((.+/)|/)?"
         else:
-            regex += regex_map.get(token.type, token.value)
-    suffix = "(.*)?" if token.type in slash_tokens else "(/.*)?"
-    left_anchored_regex = f"^{left_anchored_prefix}{regex}{suffix}$"
+            core_regex += regex_map.get(token.type, token.value)
+
+    # get final regex
+    suffix = "" if token.type in slash_tokens else "(/|$)"
+    left_anchored_regex = f"^{left_anchored_prefix}{core_regex}{suffix}"
     if only_left_anchoring:
-        final_regex = left_anchored_regex
+        regex = left_anchored_regex
     else:
-        suffix = "/?" if token.type not in slash_tokens else ""
-        right_anchored_regex = f"^(.*/)?{regex}{suffix}$"
-        final_regex = f"({left_anchored_regex})|({right_anchored_regex})"
-    return re.compile(final_regex)
+        right_anchored_regex = f".*/{core_regex}{suffix}$"
+        regex = f"({left_anchored_regex})|({right_anchored_regex})"
+
+    return re.compile(regex)
