@@ -718,3 +718,15 @@
     - "a/b/bar.txt"
   non_matches:
     - "a"
+# -----------------
+- patterns: |
+    a?c
+    !abc
+  matches:
+    - "abc/acc"
+    - "acc/abc"
+    - "acc/foo"
+  non_matches:
+    - "abc"
+    - "abc/foo"
+    - "foo/abc"

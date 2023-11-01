@@ -1,42 +1,57 @@
 import re
+from typing import Union
+from pathlib import Path
 from dataclasses import field
 from dataclasses import dataclass
 
-from gitignore_match.logs import log
-from gitignore_match.lib.gitglob_to_regex import gitglob_to_regex
+from gitignore_match.lib.wildmatch import wildmatch_match
+from gitignore_match.lib.wildmatch import wildmatch_to_parts
 
-path_name_pattern = re.compile(r"[^/]+/?$")
+TRAILING_WHITESPACE_REGEX = re.compile(r"(?<!\\)\s*$")
 
 
 @dataclass
 class Pattern:
     glob: str
-    regex: re.Pattern = field(init=False)
+    parts: list[Union[re.Pattern, None]] = field(init=False)
     negated: bool = False
+    is_dir: bool = False
 
     def __post_init__(self):
-        # parse negation prefix (!)
         inner_glob = self.glob
+
+        # remove trailing whitespace
+        trailing_whitespace = TRAILING_WHITESPACE_REGEX.search(inner_glob)
+        inner_glob = inner_glob[: trailing_whitespace.start()]
+
+        # check negation prefix (!)
         if self.glob.startswith("!"):
             self.negated = True
             inner_glob = self.glob[1:]
 
-        # get regex
-        try:
-            self.regex = gitglob_to_regex(inner_glob)
-        except Exception as err:
-            log.debug(f"Invalid regular expression: {err}")
-            self.regex = re.compile("(?!)")
+        # parse final slash
+        if self.glob.endswith(("/", "/**")):
+            self.is_dir = True
 
-    def match(self, path: str) -> bool:
-        result = self.regex.search(path)
-        return result.group(0) if result else None
+        # get parts
+        self.parts = wildmatch_to_parts(inner_glob)
 
-    def fullmatch(self, path: str) -> bool:
-        return bool(self.regex.fullmatch(path))
+    def match(self, path: Path, is_dir: bool) -> list[int]:
+        if self.parts is None:
+            return False
+        path_parts = list(path.parts)
+        num_part_list = wildmatch_match(path_parts, self.parts)
+        # check directory parttern
+        if (
+            num_part_list
+            and min(num_part_list) == len(path_parts)
+            and (self.is_dir and not is_dir)
+        ):
+            return []
+        return num_part_list
 
     def __str__(self):
         return (
-            f"Glob: {self.glob} Regex: {self.regex.pattern}"
+            f"Glob: {self.glob} Parts: {[(part.pattern if part else '_') for part in self.parts]}"
             f"{ ' (negated)' if self.negated else ''}"
         )

@@ -1,9 +1,10 @@
-
+# mypy: disable-error-code="name-defined"
 import re
 
 from sly import Lexer
 
 from gitignore_match.logs import log
+
 
 class CCLexer(Lexer):
     tokens = {  # noqa
@@ -80,6 +81,7 @@ regex_map = {
     "END": r"]",
 }
 
+
 def validate_range(range_text):
     """Return the range itself if valid or empty string otherwise.
 
@@ -96,6 +98,7 @@ def validate_range(range_text):
     except Exception:
         return ""
     return range_text
+
 
 def character_class_to_regex(text: str) -> str:
     tokens = cc_lexer.tokenize(text)
