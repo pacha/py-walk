@@ -8,12 +8,11 @@ from gitignore_match.logs import log
 
 class CCLexer(Lexer):
     tokens = {  # noqa
-        NEGATED_START_BRACKET_DASH,  # noqa
         NEGATED_START_BRACKET,  # noqa
         NEGATED_START,  # noqa
-        BARE_START_BRACKET_DASH,  # noqa
         BARE_START_BRACKET,  # noqa
         BARE_START,  # noqa
+        CLASS_EMPTY,  # noqa
         CLASS_ALNUM,  # noqa
         CLASS_ALPHA,  # noqa
         CLASS_BLANK,  # noqa
@@ -27,17 +26,16 @@ class CCLexer(Lexer):
         CLASS_UPPER,  # noqa
         CLASS_XDIGIT,  # noqa
         RANGE,  # noqa
-        CHAR,  # noqa
-        END_DASH,  # noqa
+        ESC,  # noqa
         END,  # noqa
+        CHAR,  # noqa
     }
 
-    NEGATED_START_BRACKET_DASH = r"^\[(!|\^)\]-"
     NEGATED_START_BRACKET = r"^\[(!|\^)\]"
     NEGATED_START = r"^\[(!|\^)"
-    BARE_START_BRACKET_DASH = r"^\[\]-"
     BARE_START_BRACKET = r"^\[\]"
     BARE_START = r"^\["
+    CLASS_EMPTY = r"\[::\]"
     CLASS_ALNUM = r"\[:alnum:\]"
     CLASS_ALPHA = r"\[:alpha:\]"
     CLASS_BLANK = r"\[:blank:\]"
@@ -50,19 +48,17 @@ class CCLexer(Lexer):
     CLASS_SPACE = r"\[:space:\]"
     CLASS_UPPER = r"\[:upper:\]"
     CLASS_XDIGIT = r"\[:xdigit:\]"
-    RANGE = r"(\\\]|\\-|[^]-])-(\\\]|\\-|[^]-])"
-    CHAR = r"\\\]|\\-|[^]-]"
-    END_DASH = r"-\]$"
+    RANGE = r"(\\.|.)-(\\.|.)"
+    ESC = r"\\."
     END = r"\]$"
+    CHAR = r"."
 
 
 cc_lexer = CCLexer()
 
 regex_map = {
-    "NEGATED_START_BRACKET_DASH": r"[^\]-",
     "NEGATED_START_BRACKET": r"[^\]",
     "NEGATED_START": r"[^",
-    "BARE_START_BRACKET_DASH": r"[\]-",
     "BARE_START_BRACKET": r"[\]",
     "BARE_START": r"[",
     "CLASS_ALNUM": r"a-zA-Z0-9",
@@ -77,7 +73,6 @@ regex_map = {
     "CLASS_SPACE": r" \t\r\n\v\f",
     "CLASS_UPPER": r"A-Z",
     "CLASS_XDIGIT": r"A-Fa-f0-9",
-    "END_DASH": r"-]",
     "END": r"]",
 }
 
@@ -90,13 +85,23 @@ def validate_range(range_text):
     character class expression is still evaluated evaluated even if the
     range is invalid.
     """
-    try:
+    if range_text[0] == "\\":
+        range_text = re.escape(range_text[1]) + range_text[2:]
+    if range_text[-2] == "\\":
+        range_text = range_text[:-2] + re.escape(range_text[-1])
+    if range_text.startswith(("^", "!")):
         # characters 'a' and 'z' ensure that the range
         # is considered in a middle position (eg. '^' would be
         # considered as a special character right after '['
-        _ = re.compile(f"[a{range_text}z]")
+        test_range_text = f"[a{range_text}z]"
+    else:
+        test_range_text = f"[{range_text}]"
+
+    try:
+        _ = re.compile(test_range_text)
     except Exception:
         return ""
+
     return range_text
 
 
@@ -107,8 +112,12 @@ def character_class_to_regex(text: str) -> str:
         log.debug(f"- cc token: {token.type} ({token.value})")
         if token.type == "CHAR":
             regex += token.value
+        elif token.type == "ESC":
+            regex += re.escape(token.value[1:])
         elif token.type == "RANGE":
             regex += validate_range(token.value)
+        elif token.type == "CLASS_EMPTY":
+            return "(?!)"
         else:
             regex += regex_map.get(token.type, token.value)
     return regex

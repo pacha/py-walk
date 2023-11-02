@@ -1,4 +1,5 @@
-# -----------------
+# Library test cases
+# ------------------
 - patterns: |
     foo
     bar
@@ -163,9 +164,29 @@
 - patterns: |
     /**/foo.txt
   matches:
-  - "a/foo.txt"
   - "foo.txt"
+  - "a/foo.txt"
   - "a/b/foo.txt"
+  non_matches:
+  - "bar.txt"
+# -----------------
+- patterns: |
+    /**/**/foo.txt
+  matches:
+  - "foo.txt"
+  - "a/foo.txt"
+  - "a/b/foo.txt"
+  non_matches:
+  - "bar.txt"
+# -----------------
+- patterns: |
+    **/**/foo.txt
+  matches:
+  - "foo.txt"
+  - "a/foo.txt"
+  - "a/b/foo.txt"
+  non_matches:
+  - "bar.txt"
 # -----------------
 - patterns: |
     /**/c/foo.txt
@@ -548,6 +569,7 @@
   - "M"
   non_matches:
   - "3"
+  - "."
 # -----------------
 - patterns: |
     [[:digit:]]
@@ -576,6 +598,7 @@
   non_matches:
   - "this.txt"
   - "foobar/bat.txt"
+  - "baz/foobar/bat.txt"
 # -----------------
 - patterns: |
     foobar/
@@ -603,6 +626,7 @@
   matches:
   - "foo/this.txt"
   - "foo/bar.txt"
+  - "foo/a/bar.txt"
   non_matches:
   - "bar.txt"
 # -----------------
@@ -611,6 +635,7 @@
     !bar.txt
   matches:
   - "foo/this.txt"
+  - "foo/a/bar.txt"
   non_matches:
   - "foo/bar.txt"
   - "bar.txt"
@@ -716,6 +741,19 @@
   matches:
     - "a/c"
     - "a/b/bar.txt"
+    - "a/b"
+    - "a/b/c"
+  non_matches:
+    - "a"
+# -----------------
+- patterns: |
+    /a/**/**
+    !a/b/
+  matches:
+    - "a/c"
+    - "a/b/bar.txt"
+    - "a/b"
+    - "a/b/c"
   non_matches:
     - "a"
 # -----------------

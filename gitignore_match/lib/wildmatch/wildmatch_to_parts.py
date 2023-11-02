@@ -17,7 +17,7 @@ class WildmatchLexer(Lexer):
         GLOB,  # noqa
     }
 
-    DOUBLE_STAR = r"\*\*"
+    DOUBLE_STAR = r"(^(\*\*/)+)|((/\*\*)+$)|((/\*\*)+/)"
     SLASH = r"/"
     GLOB = r"[^/]+"
 

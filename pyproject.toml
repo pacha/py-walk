@@ -33,6 +33,7 @@ build-backend = "hatchling.build"
 log_cli = false
 log_cli_level = "DEBUG"
 log_cli_format = "%(message)s"
+filterwarnings = ["ignore::FutureWarning"]
 
 [tool.mypy]
 ignore_missing_imports = true

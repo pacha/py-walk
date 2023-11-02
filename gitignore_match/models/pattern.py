@@ -22,7 +22,8 @@ class Pattern:
 
         # remove trailing whitespace
         trailing_whitespace = TRAILING_WHITESPACE_REGEX.search(inner_glob)
-        inner_glob = inner_glob[: trailing_whitespace.start()]
+        if trailing_whitespace:
+            inner_glob = inner_glob[: trailing_whitespace.start()]
 
         # check negation prefix (!)
         if self.glob.startswith("!"):
