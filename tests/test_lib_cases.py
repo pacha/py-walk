@@ -1,4 +1,3 @@
-
 from gitignore_match.logs import log
 
 

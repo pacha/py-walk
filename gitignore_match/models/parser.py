@@ -24,9 +24,10 @@ class Parser:
         self.base_dir = base_dir
 
     def match(self, path: Union[Path, str]) -> bool:
-        # normalize pathlib.Path
+        # check if path is a directory
         trailing_slash = path.endswith(os.sep) if isinstance(path, str) else False
         full_path = self.base_dir / Path(path)
+        path_is_dir = full_path.is_dir() or trailing_slash
 
         # directory paths always have a trailing slash so the Pattern
         # class doesn't have to access disk
@@ -36,29 +37,22 @@ class Parser:
             raise GitignoreMatchInputError(
                 f"Error: path '{path}' is not relative to base dir '{self.base_dir}'"
             )
-        path_is_dir = full_path.is_dir() or trailing_slash
 
         # match against each pattern
         matched_patterns: list[int] = []
         log.debug(f"\n-- Matching path: {relative_path} (is_dir: {path_is_dir})")
 
         for pattern in self.patterns:
-            log.debug(f"- {pattern} (history: {matched_patterns})")
             # if no match found, skip negative patterns
             if pattern.negated and not matched_patterns:
                 continue
 
             # check if pattern matches
             matched_parts = pattern.match(relative_path, path_is_dir)
-            log.debug(f"- Matched parts {matched_parts})")
             if matched_parts:
                 if pattern.negated:
-                    if set(matched_patterns) - set(matched_parts):
-                        log.debug("- Not negated!")
-                    else:
-                        log.debug("- Negated!")
+                    if not (set(matched_patterns) - set(matched_parts)):
                         matched_patterns = []
                 else:
-                    log.debug("- Matched!")
                     matched_patterns.extend(matched_parts)
         return bool(matched_patterns)

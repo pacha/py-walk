@@ -8,6 +8,7 @@ import pytest
 from gitignore_match.logs import log
 from gitignore_match import get_parser_from_file
 
+
 # change logging settings for testing
 @pytest.fixture(autouse=True)
 def set_log_level(caplog):
@@ -44,9 +45,11 @@ def yaml_data(tests_filename):
 def lib_tests(request):
     return request.param
 
+
 @pytest.fixture(params=yaml_data("git-tests.yaml"), scope="session")
 def git_tests(request):
     return request.param
+
 
 @pytest.fixture
 def test_runner():
@@ -63,7 +66,9 @@ def test_runner():
 
         # check actual result from Git
         command_result = run(
-            ["git", "check-ignore", "--", path], cwd=gitignore_path.parent, capture_output=True
+            ["git", "check-ignore", "--", path],
+            cwd=gitignore_path.parent,
+            capture_output=True,
         )
         git_result = bool(command_result.returncode == 0)
 
