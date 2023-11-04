@@ -178,4 +178,3 @@ parameter.
 > Note: it is possible to check non-existing paths using the parser,
 > however, it needs a `base_dir` to replicate the behavior of Git,
 > which checks the actual filesystem to determine some of the matches.
-
