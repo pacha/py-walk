@@ -1,7 +1,7 @@
 from typing import Union
 from pathlib import Path
 
-from gitignore_match.models import Parser
+from py_walk.models import Parser
 from .get_parser_from_text import get_parser_from_text
 
 

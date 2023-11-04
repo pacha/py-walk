@@ -1,6 +1,6 @@
 import logging
 
-log = logging.getLogger("gitignore_match")
+log = logging.getLogger("py_walk")
 log.setLevel(logging.INFO)
 
 # add handler

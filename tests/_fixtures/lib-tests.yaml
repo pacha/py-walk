@@ -1,0 +1,770 @@
+# Library test cases
+# ------------------
+- patterns: |
+    foo
+    bar
+    baz
+  matches:
+    - "foo"
+    - "bar/a"
+    - "a/baz"
+  non_matches:
+    - "this"
+    - "that"
+# -----------------
+- patterns: |
+    foo/*
+    !foo/*.txt
+  matches:
+    - "foo/baz.png"
+    - "foo/a/b/file.txt"
+  non_matches:
+    - "foo/bar.txt"
+# -----------------
+- patterns: |
+
+    # just a comment
+    a?c
+
+  matches:
+  - "abc"
+  - "acc"
+  non_matches:
+  - "acd"
+  - "abcc"
+# -----------------
+- patterns: |
+
+    # This is just a comment
+    *.txt
+
+    foo/*.bk
+
+        # Another comment
+
+  matches:
+  - "bar.txt"
+  - "foo/bar.txt"
+  - "foo/bazz.bk"
+  - "dir1/bar.txt"
+  non_matches:
+  - "bazz.bk"
+  - "abc.jpeg"
+# -----------------
+- patterns: |
+    foo
+  matches:
+  - "foo"
+  - "foo/"
+  - "foo/a"
+  - "foo/a/"
+  - "foo/a/b"
+  - "foo/a/b/"
+  - "a/foo"
+  - "a/foo/"
+  - "a/b/foo"
+  - "a/b/foo/"
+  non_matches:
+  - "bar"
+  - "foobar"
+  - "barfoo"
+# -----------------
+- patterns: |
+    foo/
+  matches:
+  - "foo/"
+  - "foo/a"
+  - "foo/a/b"
+  - "a/foo/"
+  - "a/b/foo/"
+  non_matches:
+  - "foo"
+  - "a/b/foo"
+  - "foobar"
+  - "a/foo"
+  - "barfoo"
+  - "foobar/"
+  - "barfoo/"
+# -----------------
+- patterns: |
+    foo/bar
+  matches:
+  - "foo/bar"
+  - "foo/bar/"
+  - "foo/bar/a"
+  - "foo/bar/a/b"
+  non_matches:
+  - "a/foo/bar"
+  - "a/b/foo/bar"
+# -----------------
+- patterns: |
+    **/
+  matches:
+  - "a/foo.txt"
+  non_matches:
+  - "foo.txt"
+# -----------------
+- patterns: |
+    **/a
+  matches:
+  - "a"
+  - "a/"
+# -----------------
+- patterns: |
+    **/a/
+  matches:
+  - "a/"
+  non_matches:
+  - "a"
+# -----------------
+- patterns: |
+    **/foo.txt
+  matches:
+  - "a/foo.txt"
+  - "foo.txt"
+  - "a/b/foo.txt"
+# -----------------
+- patterns: |
+    **/c/foo.txt
+  matches:
+  - "a/b/c/foo.txt"
+# -----------------
+- patterns: |
+    **/?/foo.txt
+  matches:
+  - "a/b/foo.txt"
+  non_matches:
+  - "a/bc/foo.txt"
+# -----------------
+- patterns: |
+    **/??/foo.txt
+  matches:
+  - "a/bc/foo.txt"
+# -----------------
+- patterns: |
+    /**/
+  matches:
+  - "a/foo.txt"
+  non_matches:
+  - "foo.txt"
+# -----------------
+- patterns: |
+    /**/a
+  matches:
+  - "a"
+  - "a/"
+# -----------------
+- patterns: |
+    /**/a/
+  matches:
+  - "a/"
+  non_matches:
+  - "a"
+# -----------------
+- patterns: |
+    /**/foo.txt
+  matches:
+  - "foo.txt"
+  - "a/foo.txt"
+  - "a/b/foo.txt"
+  non_matches:
+  - "bar.txt"
+# -----------------
+- patterns: |
+    /**/**/foo.txt
+  matches:
+  - "foo.txt"
+  - "a/foo.txt"
+  - "a/b/foo.txt"
+  non_matches:
+  - "bar.txt"
+# -----------------
+- patterns: |
+    **/**/foo.txt
+  matches:
+  - "foo.txt"
+  - "a/foo.txt"
+  - "a/b/foo.txt"
+  non_matches:
+  - "bar.txt"
+# -----------------
+- patterns: |
+    /**/c/foo.txt
+  matches:
+  - "a/b/c/foo.txt"
+# -----------------
+- patterns: |
+    /**/?/foo.txt
+  matches:
+  - "a/b/foo.txt"
+  non_matches:
+  - "a/bc/foo.txt"
+# -----------------
+- patterns: |
+    /**/??/foo.txt
+  matches:
+  - "a/bc/foo.txt"
+# -----------------
+- patterns: |
+    a**/foo.txt
+  non_matches:
+  - "abfoo.txt"
+# -----------------
+- patterns: |
+    ?
+  matches:
+  - "a"
+  - "a/a"
+  - "c"
+  non_matches:
+  - "aa"
+  - "abc"
+# -----------------
+- patterns: |
+    a?c
+  matches:
+  - "abc"
+  non_matches:
+  - "abbc"
+  - "ac"
+  - "a"
+# -----------------
+- patterns: |
+    a*c
+  matches:
+  - "abc"
+  - "ababc"
+  - "ac"
+# -----------------
+- patterns: |
+    a\*c
+  matches:
+  - "a*c"
+  non_matches:
+  - "abc"
+  - "ababc"
+  - "ababc"
+# -----------------
+- patterns: |
+    a??c
+  matches:
+  - "abbc"
+  non_matches:
+  - "abcbc"
+  - "abbcc"
+# -----------------
+- patterns: |
+    a\?c
+  matches:
+  - "a?c"
+  non_matches:
+  - "abc"
+# -----------------
+- patterns: |
+    a\?\?c
+  matches:
+  - "a??c"
+# -----------------
+- patterns: |
+    [a]
+  matches:
+  - "a"
+  non_matches:
+  - "b"
+  - "aa"
+# -----------------
+- patterns: |
+    a[bc]d
+  matches:
+  - "abd"
+  non_matches:
+  - "azd"
+# -----------------
+- patterns: |
+    a[bcd]d
+  matches:
+  - "add"
+  non_matches:
+  - "azd"
+# -----------------
+- patterns: |
+    a[!bc]d
+  matches:
+  - "azd"
+  non_matches:
+  - "abd"
+# -----------------
+- patterns: |
+    A[z-a]D
+  non_matches:
+  - "AmD"
+# -----------------
+- patterns: |
+    [!a-z]
+  matches:
+  - "A"
+  non_matches:
+  - "a"
+# -----------------
+- patterns: |
+    []a-z]
+  matches:
+  - "m"
+  - "]"
+  non_matches:
+  - "["
+  - "A"
+# -----------------
+- patterns: |
+    [!]a-z]
+  matches:
+  - "S"
+  - "["
+  non_matches:
+  - "]"
+  - "s"
+# -----------------
+- patterns: |
+    []-]
+  matches:
+  - "]"
+  - "-"
+  non_matches:
+  - "a"
+  - "["
+# -----------------
+- patterns: |
+    a]b
+  matches:
+  - "a]b"
+# -----------------
+- patterns: |
+    a\[b
+  matches:
+  - "a[b"
+# -----------------
+- patterns: |
+    a[b
+  non_matches:
+  - "a[b"
+# -----------------
+- patterns: |
+    \!abc
+  matches:
+  - "!abc"
+# -----------------
+- patterns: |
+    a/**/z
+  matches:
+  - "a/z"
+  - "a/b/z"
+  - "a/b/c/z"
+  - "a/b/c/x/z"
+  - "a/z/"
+  non_matches:
+  - "a/b/c"
+  - "a"
+# -----------------
+- patterns: "foo bar"
+  matches:
+  - "foo bar"
+  non_matches:
+  - "foo bar "
+# -----------------
+- patterns: 'foo\ bar'
+  matches:
+  - "foo bar"
+  non_matches:
+  - "foo bar "
+# -----------------
+- patterns: 'foo '
+  matches:
+  - "foo"
+  non_matches:
+  - "foo "
+# -----------------
+- patterns: 'foo\ '
+  matches:
+  - "foo "
+  non_matches:
+  - "foo"
+# -----------------
+- patterns: 'foo \ '
+  matches:
+  - "foo  "
+  non_matches:
+  - "foo "
+  - "foo   "
+# -----------------
+- patterns: |
+    __pycache__/
+    *.py[cod]
+  matches:
+  - "main.pyc"
+  - "dir/main.pyc"
+  - "__pycache__/"
+  non_matches:
+  - "main.py"
+# -----------------
+- patterns: |
+    [AB^-a]
+  matches:
+  - "A"
+  - "^"
+  - "_"
+  - "a"
+  non_matches:
+  - "Z"
+  - "]"
+# -----------------
+- patterns: |
+    [[:alpha:]]
+  matches:
+  - "a"
+  - "M"
+  non_matches:
+  - "3"
+# -----------------
+- patterns: |
+    [a-zA-Z]
+  matches:
+  - "a"
+  - "M"
+  non_matches:
+  - "3"
+# -----------------
+- patterns: |
+    [[:alpha:]CD]
+  matches:
+  - "a"
+  - "b"
+  - "C"
+  - "D"
+  non_matches:
+  - "_"
+  - "!"
+  - "3"
+# -----------------
+- patterns: |
+    [^abc]
+  matches:
+  - "d"
+  - "e"
+  - "M"
+  non_matches:
+  - "a"
+  - "b"
+  - "c"
+# -----------------
+- patterns: |
+    [!abc]
+  matches:
+  - "d"
+  - "e"
+  - "M"
+  non_matches:
+  - "a"
+  - "b"
+  - "c"
+# -----------------
+- patterns: |
+    []]
+  matches:
+  - "]"
+  non_matches:
+  - "["
+  - "a"
+# -----------------
+- patterns: |
+    []-]
+  matches:
+  - "]"
+  - "-"
+  non_matches:
+  - "["
+  - "a"
+# -----------------
+- patterns: |
+    [!]]
+  matches:
+  - "["
+  - "a"
+  non_matches:
+  - "]"
+# -----------------
+- patterns: |
+    [!]-]
+  matches:
+  - "["
+  - "a"
+  non_matches:
+  - "]"
+  - "-"
+# -----------------
+- patterns: |
+    [^]]
+  matches:
+  - "["
+  - "a"
+  non_matches:
+  - "]"
+# -----------------
+- patterns: |
+    [^]-]
+  matches:
+  - "["
+  - "a"
+  non_matches:
+  - "]"
+  - "-"
+# -----------------
+- patterns: |
+    [^]-a-z]
+  matches:
+  - "["
+  - "9"
+  non_matches:
+  - "a"
+  - "]"
+  - "-"
+# -----------------
+- patterns: |
+    [^]a-z-]
+  matches:
+  - "["
+  - "9"
+  non_matches:
+  - "a"
+  - "]"
+  - "-"
+# -----------------
+- patterns: |
+    [^]^-a-]
+  matches:
+  - "["
+  - "3"
+  - "A"
+  - "b"
+  non_matches:
+  - "]"
+  - "_"
+  - "a"
+  - "-"
+# -----------------
+# ^-3 is an invalid range and therefore ignored
+- patterns: |
+    [^]^-3-]
+  matches:
+  - "["
+  - "9"
+  - "2"
+  non_matches:
+  - "]"
+  - "-"
+# -----------------
+- patterns: |
+    [[:alpha:]]
+  matches:
+  - "a"
+  - "M"
+  non_matches:
+  - "3"
+  - "."
+# -----------------
+- patterns: |
+    [[:digit:]]
+  matches:
+  - "3"
+  - "0"
+  non_matches:
+  - "a"
+  - "$"
+# -----------------
+- patterns: |
+    [[:blank:]]
+  matches:
+  - " "
+  - "\t"
+  non_matches:
+  - "a"
+  - "$"
+# -----------------
+- patterns: |
+    foobar/*
+    !foobar/bat.txt
+  matches:
+  - "foobar/this.txt"
+  - "foobar/a/that.txt"
+  non_matches:
+  - "this.txt"
+  - "foobar/bat.txt"
+  - "baz/foobar/bat.txt"
+# -----------------
+- patterns: |
+    foobar/
+    !foobar/bat.txt
+  matches:
+  - "foobar/this.txt"
+  - "foobar/a/that.txt"
+  - "foobar/bat.txt"
+  non_matches:
+  - "this.txt"
+# -----------------
+- patterns: |
+    foo/*
+    !foo/bar/bat.txt
+  matches:
+  - "foo/this.txt"
+  - "foo/a/that.txt"
+  - "foo/bar/bat.txt"
+  non_matches:
+  - "this.txt"
+# -----------------
+- patterns: |
+    foo/
+    !bar.txt
+  matches:
+  - "foo/this.txt"
+  - "foo/bar.txt"
+  - "foo/a/bar.txt"
+  non_matches:
+  - "bar.txt"
+# -----------------
+- patterns: |
+    foo/*
+    !bar.txt
+  matches:
+  - "foo/this.txt"
+  - "foo/a/bar.txt"
+  non_matches:
+  - "foo/bar.txt"
+  - "bar.txt"
+# -----------------
+- patterns: |
+    f?o
+    !foo
+  matches:
+  - "fao"
+  - "fio"
+  non_matches:
+  - "foo"
+# -----------------
+- patterns: |
+    *
+    !.gitignore
+    !script.pl
+    !template.latex
+  matches:
+  - "foo.txt"
+  - "a"
+  - "bar/baz.png"
+  - "b/script.pl"
+  non_matches:
+  - ".gitignore"
+  - "script.pl"
+  - "template.latex"
+# -----------------
+- patterns: |
+    fo*
+  matches:
+    - "foo"
+    - "fooo"
+    - "foo.txt"
+    - "foo/bar.txt"
+    - "bar/foo"
+# -----------------
+- patterns: |
+    *
+  matches:
+    - "foo"
+    - "fooo"
+    - "foo.txt"
+    - "foo/bar.txt"
+    - "bar/foo"
+# -----------------
+- patterns: |
+    fo*
+    !foobar.txt
+  matches:
+    - "foo"
+    - "fooo"
+    - "foo.txt"
+    - "foo/bar.txt"
+    - "bar/foo"
+  non_matches:
+    - "foobar.txt"
+    - "a/foobar.txt"
+    - "foobar.txt/file"
+# -----------------
+- patterns: |
+    *
+    !foobar.txt
+  matches:
+    - "foo"
+    - "fooo"
+    - "foo.txt"
+    - "foo/bar.txt"
+    - "bar/foo"
+    - "a/foobar.txt"
+    - "foobar.txt/file"
+  non_matches:
+    - "foobar.txt"
+# -----------------
+- patterns: |
+    /*
+  matches:
+    - "foo.txt"
+    - "foobar.txt"
+    - "foo/bar.txt"
+# -----------------
+- patterns: |
+    /*
+    !*/
+  matches:
+    - "foo.txt"
+    - "foobar.txt"
+  non_matches:
+    - "foo/bar.txt"
+    - "a/b/bar.txt"
+# -----------------
+- patterns: |
+    /foo/*
+    !/foo/*/
+  matches:
+    - "foo/bar.txt"
+  non_matches:
+    - "foo/a/bar.txt"
+# -----------------
+- patterns: |
+    /a/**
+    !a/b/
+  matches:
+    - "a/c"
+    - "a/b/bar.txt"
+    - "a/b"
+    - "a/b/c"
+  non_matches:
+    - "a"
+# -----------------
+- patterns: |
+    /a/**/**
+    !a/b/
+  matches:
+    - "a/c"
+    - "a/b/bar.txt"
+    - "a/b"
+    - "a/b/c"
+  non_matches:
+    - "a"
+# -----------------
+- patterns: |
+    a?c
+    !abc
+  matches:
+    - "abc/acc"
+    - "acc/abc"
+    - "acc/foo"
+  non_matches:
+    - "abc"
+    - "abc/foo"
+    - "foo/abc"

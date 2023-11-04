@@ -4,8 +4,8 @@ from typing import Union
 from pathlib import Path
 from dataclasses import dataclass
 
-from gitignore_match.exceptions import GitignoreMatchInputError
-from gitignore_match.logs import log
+from py_walk.exceptions import PyWalkInputError
+from py_walk.logs import log
 from .pattern import Pattern
 
 
@@ -24,29 +24,35 @@ class Parser:
         self.base_dir = base_dir
 
     def match(self, path: Union[Path, str]) -> bool:
-        # normalize pathlib.Path
+        # check if path is a directory
         trailing_slash = path.endswith(os.sep) if isinstance(path, str) else False
         full_path = self.base_dir / Path(path)
+        path_is_dir = full_path.is_dir() or trailing_slash
 
         # directory paths always have a trailing slash so the Pattern
         # class doesn't have to access disk
         try:
             relative_path = full_path.relative_to(self.base_dir)
         except ValueError:
-            raise GitignoreMatchInputError(
+            raise PyWalkInputError(
                 f"Error: path '{path}' is not relative to base dir '{self.base_dir}'"
             )
-        suffix = os.sep if full_path.is_dir() or trailing_slash else ""
-        path_str = f"{relative_path.as_posix()}{suffix}"
 
         # match against each pattern
-        match_found = False
-        log.debug("\n-- Matching")
-        log.debug(f"Path: '{path_str}'")
+        matched_patterns: List[int] = []
+        log.debug(f"\n-- Matching path: {relative_path} (is_dir: {path_is_dir})")
+
         for pattern in self.patterns:
-            if pattern.match(path_str):
-                match_found = not pattern.negated
-                log.debug(f"{pattern} [Match!]")
-            else:
-                log.debug(f"{pattern}")
-        return match_found
+            # if no match found, skip negative patterns
+            if pattern.negated and not matched_patterns:
+                continue
+
+            # check if pattern matches
+            matched_parts = pattern.match(relative_path, path_is_dir)
+            if matched_parts:
+                if pattern.negated:
+                    if not (set(matched_patterns) - set(matched_parts)):
+                        matched_patterns = []
+                else:
+                    matched_patterns.extend(matched_parts)
+        return bool(matched_patterns)

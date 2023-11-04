@@ -1,4 +1,4 @@
-name: Publish Python distribution
+name: Publish Python Distribution
 
 on:
   push:
@@ -35,8 +35,8 @@ jobs:
 
     - name: Install pypa/build
       if: steps.check-version.outputs.version != ''
-      run: >-
-        python3 -m pip install build --user
+      run: |
+        pip install ".[publish]"
 
     - name: Build a binary wheel and a source tarball
       if: steps.check-version.outputs.version != ''
@@ -57,7 +57,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: testpypi
-      url: https://test.pypi.org/p/gitignore-match
+      url: https://test.pypi.org/p/py-walk
     permissions:
       id-token: write  # IMPORTANT: mandatory for trusted publishing
 
@@ -81,7 +81,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: pypi
-      url: https://pypi.org/p/gitignore-match
+      url: https://pypi.org/p/py-walk
     permissions:
       id-token: write  # IMPORTANT: mandatory for trusted publishing
 
