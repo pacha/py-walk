@@ -15,17 +15,25 @@ _Python library to filter filesystem paths based on gitignore-like patterns._
 Example:
 ```python
 from py_walk import walk
+from py_walk import get_parser_from_text
 
-ignore = """
+patterns = """
     **/data/*.bin
+    !**/data/foo.bin
 
     # python files
     __pycache__/
     *.py[cod]
 """
 
-for path in walk("some/directory", ignore=ignore):
+# you can get the filtered paths from a directory
+for path in walk("some/directory", ignore=patterns):
     do_something(path)
+
+# ...or check paths against the patterns manually
+parser = get_parser_from_text(patterns, base_dir="some/directory")
+if parser.match("file.txt"):
+    do_something_else()
 ```
 
 **py-walk** can be useful for applications or tools that work with paths and aim to
@@ -89,7 +97,7 @@ for path in walk("/some/directory", ignore=ignore):
 
 To only retrieve paths that match a set of patterns, use the `match` parameter
 (again, passing a text blob or a list of patterns):
-```
+```python
 for path in walk("/some/directory", ignore=["data/"], match=["*.css", "*.js"]):
     ...
 ```
