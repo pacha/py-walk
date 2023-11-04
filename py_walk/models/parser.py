@@ -39,7 +39,7 @@ class Parser:
             )
 
         # match against each pattern
-        matched_patterns: list[int] = []
+        matched_patterns: List[int] = []
         log.debug(f"\n-- Matching path: {relative_path} (is_dir: {path_is_dir})")
 
         for pattern in self.patterns:

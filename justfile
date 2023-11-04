@@ -16,5 +16,5 @@ project_dir := justfile_directory()
 @format:
   black {{ project_dir }}
 
-@type-check:
+@check:
   mypy {{ project_dir }}

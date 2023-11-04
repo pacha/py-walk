@@ -1,4 +1,7 @@
-def pattern_text_to_pattern_list(text: str) -> list[str]:
+from typing import List
+
+
+def pattern_text_to_pattern_list(text: str) -> List[str]:
     """Convert gitignore-like text to a list of patterns.
 
     This function removes empty lines and leading whitespace and

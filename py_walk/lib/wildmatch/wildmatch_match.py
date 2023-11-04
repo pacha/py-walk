@@ -1,12 +1,13 @@
 import re
+from typing import List
 from typing import Union
 
 
 def wildmatch_match(
-    path_parts: list[str],
-    pattern_parts: list[Union[re.Pattern, None]],
+    path_parts: List[str],
+    pattern_parts: List[Union[re.Pattern, None]],
     index: int = 0,
-) -> list[int]:
+) -> List[int]:
     if not path_parts and not pattern_parts:
         return [index]
 

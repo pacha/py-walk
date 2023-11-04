@@ -1,3 +1,4 @@
+from typing import List
 from typing import Union
 from typing import Callable
 from typing import Generator
@@ -10,8 +11,8 @@ from .get_parser_from_text import get_parser_from_text
 
 def walk(
     base_dir: Union[Path, str],
-    ignore: Union[str, list[str], None] = None,
-    match: Union[str, list[str], None] = None,
+    ignore: Union[str, List[str], None] = None,
+    match: Union[str, List[str], None] = None,
     mode: str = "files-and-dirs",
 ) -> Generator[Path, None, None]:
     """Return all the children under a given path that match the provided filters.

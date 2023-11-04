@@ -1,4 +1,5 @@
 import re
+from typing import List
 from typing import Union
 from pathlib import Path
 from dataclasses import field
@@ -13,7 +14,7 @@ TRAILING_WHITESPACE_REGEX = re.compile(r"(?<!\\)\s*$")
 @dataclass
 class Pattern:
     glob: str
-    parts: list[Union[re.Pattern, None]] = field(init=False)
+    parts: List[Union[re.Pattern, None]] = field(init=False)
     negated: bool = False
     is_dir: bool = False
 
@@ -37,7 +38,7 @@ class Pattern:
         # get parts
         self.parts = wildmatch_to_parts(inner_glob)
 
-    def match(self, path: Path, is_dir: bool) -> list[int]:
+    def match(self, path: Path, is_dir: bool) -> List[int]:
         if self.parts is None:
             return False
         path_parts = list(path.parts)
