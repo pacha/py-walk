@@ -75,28 +75,6 @@ def test_walk_match_extension(fixtures_path):
     assert walked_path_str == paths
 
 
-def test_walk_match_extension(fixtures_path):
-    paths = [
-        "dir2/dir3/bar.txt",
-        "dir2/dir3/foo.png",
-        "dir4/bat.txt",
-        "dir4/baz.txt",
-        "foo.txt",
-    ]
-    tree = fixtures_path / "file-trees" / "dir1"
-    walked_paths = walk(
-        tree,
-        match=dedent(
-            """
-        *.txt
-        *.png
-    """
-        ),
-    )
-    walked_path_str = sorted([str(path.relative_to(tree)) for path in walked_paths])
-    assert walked_path_str == paths
-
-
 def test_walk_match_only_files(fixtures_path):
     paths = [
         "dir2/dir3/bar.txt",

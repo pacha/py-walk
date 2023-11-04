@@ -1,10 +1,11 @@
 
 project_dir := justfile_directory()
 
-export PYTHONPATH := project_dir
-
 @help:
   just --list
+
+@setup:
+  pip install -e ".[dev]"
 
 @test-all:
   pytest tests/
@@ -16,7 +17,4 @@ export PYTHONPATH := project_dir
   black {{ project_dir }}
 
 @type-check:
-  mypy {{ project_dir }}/py_walk/
-
-@cli:
-  ipython
+  mypy {{ project_dir }}

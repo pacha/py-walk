@@ -25,6 +25,25 @@ dependencies = [
 "Homepage" = "https://github.com/pacha/py-walk"
 "Bug Tracker" = "https://github.com/pacha/py-walk/issues"
 
+[project.optional-dependencies]
+dev = [
+  "py-walk[tests,type-checks,code-formatting]",
+]
+tests = [
+  "pytest",
+  "pyyaml",
+]
+type-checks = [
+  "mypy",
+  "types-pyyaml",
+]
+code-formatting = [
+  "black",
+]
+publish = [
+  "build",
+]
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
