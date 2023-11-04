@@ -2,7 +2,7 @@ from typing import List
 from typing import Union
 from pathlib import Path
 
-from gitignore_match.models import Parser
+from py_walk.models import Parser
 
 
 def get_parser_from_list(pattern_list: List[str], base_dir: Union[Path, str]) -> Parser:

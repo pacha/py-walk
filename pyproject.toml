@@ -1,10 +1,10 @@
 [project]
-name = "gitignore-match"
+name = "py-walk"
 version = "0.1.0"
 authors = [
     {name="Andrés Sopeña Pérez", email="code@ehmm.org"},
 ]
-description = "Match filenames against (100% compatible) gitignore glob patterns"
+description = "Filter filesystem paths based on gitignore-like patterns"
 readme = "README.md"
 requires-python = ">=3.7"
 classifiers = [
@@ -22,8 +22,8 @@ dependencies = [
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/pacha/gitignore-match"
-"Bug Tracker" = "https://github.com/pacha/gitignore-match/issues"
+"Homepage" = "https://github.com/pacha/py-walk"
+"Bug Tracker" = "https://github.com/pacha/py-walk/issues"
 
 [build-system]
 requires = ["hatchling"]

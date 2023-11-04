@@ -28,4 +28,4 @@ jobs:
         pip install types-pyyaml
 
     - name: Run mypy checks
-      run: mypy gitignore_match/
+      run: mypy py_walk/

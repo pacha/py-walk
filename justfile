@@ -16,7 +16,7 @@ export PYTHONPATH := project_dir
   black {{ project_dir }}
 
 @type-check:
-  mypy {{ project_dir }}/gitignore_match/
+  mypy {{ project_dir }}/py_walk/
 
 @cli:
   ipython

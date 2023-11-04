@@ -1,4 +1,4 @@
-from gitignore_match.logs import log
+from py_walk.logs import log
 
 
 def test_lib_cases(repo_path, lib_tests, test_runner):

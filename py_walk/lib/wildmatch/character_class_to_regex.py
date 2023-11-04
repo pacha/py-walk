@@ -3,7 +3,7 @@ import re
 
 from sly import Lexer
 
-from gitignore_match.logs import log
+from py_walk.logs import log
 
 
 class CCLexer(Lexer):

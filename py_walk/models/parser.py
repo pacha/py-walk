@@ -4,8 +4,8 @@ from typing import Union
 from pathlib import Path
 from dataclasses import dataclass
 
-from gitignore_match.exceptions import GitignoreMatchInputError
-from gitignore_match.logs import log
+from py_walk.exceptions import PyWalkInputError
+from py_walk.logs import log
 from .pattern import Pattern
 
 
@@ -34,7 +34,7 @@ class Parser:
         try:
             relative_path = full_path.relative_to(self.base_dir)
         except ValueError:
-            raise GitignoreMatchInputError(
+            raise PyWalkInputError(
                 f"Error: path '{path}' is not relative to base dir '{self.base_dir}'"
             )
 

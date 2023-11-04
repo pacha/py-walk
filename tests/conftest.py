@@ -5,14 +5,14 @@ from subprocess import run
 import yaml
 import pytest
 
-from gitignore_match.logs import log
-from gitignore_match import get_parser_from_file
+from py_walk.logs import log
+from py_walk import get_parser_from_file
 
 
 # change logging settings for testing
 @pytest.fixture(autouse=True)
 def set_log_level(caplog):
-    caplog.set_level(logging.DEBUG, logger="gitignore_match")
+    caplog.set_level(logging.DEBUG, logger="py_walk")
 
 
 @pytest.fixture(scope="session")
@@ -72,7 +72,7 @@ def test_runner():
         )
         git_result = bool(command_result.returncode == 0)
 
-        # check result from gitignore-match
+        # check result from py-walk
         lib_result = parser.match(path)
         return git_result, lib_result
 

@@ -1,4 +1,4 @@
-name: Publish Python distribution
+name: Publish Python Distribution
 
 on:
   push:
@@ -57,7 +57,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: testpypi
-      url: https://test.pypi.org/p/gitignore-match
+      url: https://test.pypi.org/p/py-walk
     permissions:
       id-token: write  # IMPORTANT: mandatory for trusted publishing
 
@@ -81,7 +81,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: pypi
-      url: https://pypi.org/p/gitignore-match
+      url: https://pypi.org/p/py-walk
     permissions:
       id-token: write  # IMPORTANT: mandatory for trusted publishing
 

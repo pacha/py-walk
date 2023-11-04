@@ -2,7 +2,7 @@ from subprocess import run
 
 import pytest
 
-from gitignore_match import get_parser_from_file
+from py_walk import get_parser_from_file
 
 
 @pytest.fixture(scope="session")

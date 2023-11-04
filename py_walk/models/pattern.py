@@ -4,8 +4,8 @@ from pathlib import Path
 from dataclasses import field
 from dataclasses import dataclass
 
-from gitignore_match.lib.wildmatch import wildmatch_match
-from gitignore_match.lib.wildmatch import wildmatch_to_parts
+from py_walk.lib.wildmatch import wildmatch_match
+from py_walk.lib.wildmatch import wildmatch_to_parts
 
 TRAILING_WHITESPACE_REGEX = re.compile(r"(?<!\\)\s*$")
 
