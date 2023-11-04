@@ -13,7 +13,7 @@ py-walk
 _Python library to filter filesystem paths based on gitignore-like patterns._
 
 Example:
-```
+```python
 from py_walk import walk
 
 ignore = """
@@ -28,7 +28,7 @@ for path in walk("some/directory", ignore=ignore):
     do_something(path)
 ```
 
-py-walk can be useful for applications or tools that work with paths and aim to
+**py-walk** can be useful for applications or tools that work with paths and aim to
 offer a `.gitignore` type file to their users. It's also handy for users working
 in interactive sessions who need to quickly retrieve sets of paths that must
 meet relatively complex constraints.
@@ -37,7 +37,7 @@ meet relatively complex constraints.
 > pattern syntax. Currently, it includes more than 500 tests, which incorporate
 > all the original tests from the Git codebase. These tests are executed against
 > `git check-ignore` to ensure as much compatibility as possible. If you find
-> any divergence, please don't hesitate to open an issue or a PR.
+> any divergence, please don't hesitate to open an issue or PR.
 
 ## Installation
 
@@ -48,7 +48,7 @@ $ pip install py-walk
 
 ## Usage
 
-With Py-Walk, you have the ability to input paths into the library to determine
+With py-walk, you have the ability to input paths into the library to determine
 whether they match with a set of gitignore-based patterns. Alternatively, you
 can directly traverse the contents of a directory, based on a set of conditions
 that the paths must meet.
@@ -56,7 +56,7 @@ that the paths must meet.
 ### walk
 
 To walk through all the contents of a directory, don't provide any constraints:
-```
+```python
 from py-walk import walk
 
 for path in walk("/some/directory/"):
@@ -70,7 +70,7 @@ for path in walk("/some/directory/"):
 > (eg. `list(walk("some-dir"))`).
 
 To ignore certain paths, you can pass patterns as a text or a list of patterns:
-```
+```python
 ignore = """
     # these patterns use gitignore syntax
     foo.txt
@@ -81,7 +81,7 @@ for path in walk("/some/directory", ignore=ignore):
     ...
 ```
 or
-```
+```python
 ignore = ["foo.txt", "/bar/**/*.dat"]
 for path in walk("/some/directory", ignore=ignore):
     ...
@@ -96,16 +96,16 @@ for path in walk("/some/directory", ignore=["data/"], match=["*.css", "*.js"]):
 > Note that the `ignore` parameter has precedence: once a path is ignored it
 > can't be reincluded using the `match` parameter due to performance reasons.
 > That includes children of ignored directories. For example, if you ignore
-> a directory "/foo/", "/foo/bar/file.txt" will be ignored even if `match`
-> includes the "*.txt" pattern.
+> a directory `/foo/`, `/foo/bar/file.txt` will be ignored even if `match`
+> includes the `*.txt` pattern.
 
 In addition, you can retrieve either only files or only directories using the
 `mode` parameter:
-```
+```python
 for path in walk("/some/directory", ignore=["static/"], mode="only-files"):
     ...
 ```
-```
+```python
 for path in walk("/some/directory", ignore=["static/"], mode="only-dirs"):
     ...
 ```
@@ -116,7 +116,7 @@ other two.
 
 > Note: you can convert any text containing gitignore-based patterns into a list using
 > the `py_walk.pattern_text_to_pattern_list` function:
-> ```
+> ```python
 > from py_walk import pattern_text_to_pattern_list
 >
 > pattern_list = pattern_text_to_pattern_list("""
