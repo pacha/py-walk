@@ -57,6 +57,7 @@ def test_slash_in_pattern_but_not_in_path_dir_exists(repo_path, parser):
     lib_result = parser.match(path)
     assert git_result == lib_result
 
+
 def test_no_base_dir(repo_path, parser):
     """When no base_dir is provided the library can't check if the provided path is a directory."""
     path = "my_dir"

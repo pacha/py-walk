@@ -5,7 +5,9 @@ from pathlib import Path
 from py_walk.models import Parser
 
 
-def get_parser_from_list(pattern_list: List[str], base_dir: Union[Path, str, None] = None) -> Parser:
+def get_parser_from_list(
+    pattern_list: List[str], base_dir: Union[Path, str, None] = None
+) -> Parser:
     """Create a PatternCollection object from a list of patterns."""
 
     # normalize base_dir to Path
