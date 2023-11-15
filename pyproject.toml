@@ -1,6 +1,6 @@
 [project]
 name = "py-walk"
-version = "0.1.0"
+version = "0.2.0"
 authors = [
     {name="Andrés Sopeña Pérez", email="code@ehmm.org"},
 ]
