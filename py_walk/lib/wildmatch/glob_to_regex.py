@@ -45,7 +45,7 @@ def glob_to_regex(glob_pattern: str) -> re.Pattern:
     for token in tokens:
         log.debug(f"- token: {token.type} ({token.value})")
         if token.type == "TEXT":
-            regex += token.value
+            regex += re.escape(token.value)
         elif token.type == "ESC":
             regex += re.escape(token.value[1:])
         elif token.type == "CHARACTER_CLASS":
