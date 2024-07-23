@@ -775,3 +775,10 @@
     - ".foo"
   non_matches:
     - "a"
+# -----------------
+- patterns: |
+    /two
+  matches:
+    - "two"
+  non_matches:
+    - "three/two"

@@ -26,7 +26,7 @@ wildmatch_lexer = WildmatchLexer()
 
 
 def wildmatch_to_parts(pattern: str) -> List[Union[re.Pattern, None]]:
-    tokens = wildmatch_lexer.tokenize(pattern)
+    tokens = list(wildmatch_lexer.tokenize(pattern))
     parts: List[Union[re.Pattern, None]] = []
     for token in tokens:
         if token.type == "DOUBLE_STAR":
@@ -46,7 +46,7 @@ def wildmatch_to_parts(pattern: str) -> List[Union[re.Pattern, None]]:
         parts.pop()
 
     # normalize patterns with one single element ('a' -> '**/a')
-    if len(parts) == 1:
+    if len(parts) == 1 and not tokens[0].type == "SLASH":
         parts.insert(0, None)
     elif len(parts) == 0:
         parts.append(re.compile(r"[^/]*"))
