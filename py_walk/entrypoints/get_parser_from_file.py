@@ -12,6 +12,8 @@ def get_parser_from_file(path: Union[Path, str]) -> Parser:
     if isinstance(path, str):
         path = Path(path)
 
-    text = path.read_text()
+    # read the file as UTF-8 whatever the locale, so that the patterns do not
+    # depend on the machine
+    text = path.read_text(encoding="utf-8")
     base_dir = path.parent
     return get_parser_from_text(text, base_dir=base_dir)
